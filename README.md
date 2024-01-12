@@ -1,5 +1,10 @@
 # drift_sqlite3_readonly
 
+> Cause: Drift migration uses `PRAGMA user_version = 1;` to compare versions
+> Solution: Add `PRAGMA user_version = 1;` to the database before using it or wait for an API change to deactivate migration
+> Issue on GitHub: https://github.com/simolus3/drift/issues/2832 
+
+
 ## SQLite file is modified with select statements
 
 My goal is to read from an existing SQLite database using Drift on the **Linux** and **MacOS** platforms without modifying the source file. 
@@ -16,7 +21,6 @@ What is being written, and how can this be prevented?
 
 Is this a bug or will the passing of database specific options be available in a future version?
 
-Here is the issue: https://github.com/simolus3/drift/issues/2832
 
 ## Getting Started
 
@@ -119,3 +123,12 @@ flutter: MD5 of database file ex1 BEFORE first read operation: 0dfb58a5244634e1b
 #9      _HomePageState.afterBuild (package:drift_sqlite3_readonly/home.page.dart:83:28)
 <asynchronous suspension>
 ```
+
+# Solution
+
+If there is no `user_version` given in the database headers, Drift is trying to run a migration which will finally execute `sqlite> PRAGMA user_version = 1;`: 
+https://drift.simonbinder.eu/api/internal_versioned_schema/versionedschema/runmigrationsteps
+
+To prevent this, you could anticipate drift and equip your database file with `sqlite> PRAGMA user_version = 1;` when you create it.
+
+With such a prepared database file (see `lib/database/ex1_user_version_1`) there is no write operation and therefore no different MD5 checksums in this example app.
