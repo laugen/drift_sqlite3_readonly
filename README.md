@@ -86,3 +86,36 @@ After the app was started, Drift or whatever changed the database as follows:
 
 ![diff txt](assets/diff_txt.png)
 ![diff hex](assets/diff_hex.png)
+
+
+# Using an existing database connection with read-only mode
+
+As suggested I tried to use a sqlite3 read-only database connection and passed it to [NativeDatabase.opened](https://drift.simonbinder.eu/api/drift.ffi/nativedatabase/nativedatabase.opened)
+
+https://github.com/laugen/drift_sqlite3_readonly/blob/native_database_opened/lib/database/connection.dart#L22
+
+```log
+flutter: database path: ./drift_sqlite3_readonly/lib/database/ex1
+flutter: resultSet: [{one: hello!, two: 10}, {one: goodbye, two: 20}]
+flutter: database path: ./drift_sqlite3_readonly/lib/database/ex1
+The Flutter DevTools debugger and profiler on macOS is available at: http://127.0.0.1:9109?uri=http://127.0.0.1:49418/DntddESAIJ0=/
+flutter: MD5 of database file ex1 BEFORE first read operation: 0dfb58a5244634e1b7262fd63c68c85b
+[ERROR:flutter/runtime/dart_vm_initializer.cc(41)] Unhandled Exception: SqliteException(8): while executing, attempt to write a readonly database, attempt to write a readonly database (code 8)
+  Causing statement: PRAGMA user_version = 1;, parameters: 
+#0      throwException (package:sqlite3/src/implementation/exception.dart:75:3)
+#1      DatabaseImplementation.execute (package:sqlite3/src/implementation/database.dart:244:9)
+#2      DatabaseImplementation.userVersion= (package:sqlite3/src/implementation/database.dart:82:5)
+#3      _SqliteVersionDelegate.setSchemaVersion (package:drift/src/sqlite3/database.dart:197:14)
+#4      DelegatedDatabase._runMigrations (package:drift/src/runtime/executor/helpers/engines.dart:463:29)
+<asynchronous suspension>
+#5      DelegatedDatabase.ensureOpen.<anonymous closure> (package:drift/src/runtime/executor/helpers/engines.dart:426:7)
+<asynchronous suspension>
+#6      _AsyncCompleter.complete (dart:async/future_impl.dart:41:3)
+<asynchronous suspension>
+#7      DatabaseConnectionUser.doWhenOpened.<anonymous closure> (package:drift/src/runtime/api/connection_user.dart:162:55)
+<asynchronous suspension>
+#8      SimpleSelectStatement._mapResponse (package:drift/src/runtime/query_builder/statements/select/select.dart:90:3)
+<asynchronous suspension>
+#9      _HomePageState.afterBuild (package:drift_sqlite3_readonly/home.page.dart:83:28)
+<asynchronous suspension>
+```
