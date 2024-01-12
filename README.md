@@ -16,6 +16,7 @@ What is being written, and how can this be prevented?
 
 Is this a bug or will the passing of database specific options be available in a future version?
 
+Here is the issue: https://github.com/simolus3/drift/issues/2832
 
 ## Getting Started
 
@@ -62,7 +63,7 @@ The app should appear as follows:
 
 All entries of the table `tbl1` should be listed.
 
-The MD5 checksum of the database file was generated once before and once after the select status end, which differ as can be seen here.
+The MD5 checksum of the database file was generated once before and once after the select statement end, which differ as can be seen here.
 
 ```log
 flutter: database path: ./drift_sqlite3_readonly/lib/database/ex1
