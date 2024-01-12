@@ -9,23 +9,14 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqlite3/sqlite3.dart';
 
-// DatabaseConnection connect({required String databaseName}) {
-//   return DatabaseConnection.delayed(Future(() async {
-//     final File file = databaseFile(databaseName: databaseName);
-//     return NativeDatabase.createBackgroundConnection(file, logStatements: true);
-//   }));
-// }
-
 DelegatedDatabase connect({required String databaseName}) {
-  if (true) {
-    String path = databasePath(databaseName: databaseName);
-    Database database = sqlite3.open(path, mode: OpenMode.readOnly, uri: true);
+  String path = databasePath(databaseName: databaseName);
+  Database database = sqlite3.open(path, mode: OpenMode.readOnly, uri: true);
 
-    ResultSet resultSet = database.select('SELECT * FROM tbl1');
-    debugPrint('resultSet: $resultSet');
+  ResultSet resultSet = database.select('SELECT * FROM tbl1');
+  debugPrint('resultSet: $resultSet');
 
-    return NativeDatabase.opened(database, logStatements: true);
-  }
+  return NativeDatabase.opened(database, logStatements: true);
 }
 
 Future<void> validateDatabaseSchema(GeneratedDatabase database) async {
